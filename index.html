@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etch-a-Sketch</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="calculator">
+        <button class="display"></button>
+        <div class="extrafunctions">
+            <button class="function fibo">Fibo(n)</button>
+            <button class="function factorial">n!</button>
+            <button class="function exponential">x<sup>n</sup></button>
+            <button id="backspace">backspace</button>
+        </div>
+        <div class="container">
+            <div class="keypad-container">
+                <div class="keyline">
+                    <button class="number">7</button>
+                    <button class="number">8</button>
+                    <button class="number">9</button>
+                </div>
+                <div class="keyline">
+                    <button class="number">4</button>
+                    <button class="number">5</button>
+                    <button class="number">6</button>
+                </div>
+                <div class="keyline">
+                    <button class="number">1</button>
+                    <button class="number">2</button>
+                    <button class="number">3</button>
+                </div>
+                <div class="keyline">
+                    <button class="number" id="clear">C</button>
+                    <button class="number">0</button>
+                    <button class="number">.</button>
+                </div>
+            </div>
+            <div class="normalfunctions">
+                <button class="function division">&div;</button>
+                <button class="function multiply">&times;</button>
+                <button class="function minus">&minus;</button>
+                <button class="function plus">&plus;</button>
+                <button class="function equal">&equals;</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"> </script>  
+
+</body>
+</html>

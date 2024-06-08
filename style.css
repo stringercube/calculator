@@ -1,0 +1,86 @@
+/* calculator stylesheet */
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10%;
+    
+}
+
+button {
+
+}
+
+.number {
+    background-color: orange;
+    width: 120px;
+    height: 90px;
+}
+
+.function {
+    background-color: rgb(129, 160, 192);
+    width: 90px;
+    height: 60px;
+}
+
+#clear {
+    background-color: rgb(129, 160, 192);
+}
+
+.calculator {
+    background-color: purple;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items:
+    width: 600px;
+    height: 800px;  
+}
+
+.display {
+    background-color: rgb(218, 202, 114);
+    width: 550px;
+    height: 150px;
+    margin: 20px 20px 40px; 
+}
+
+.extrafunctions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: space-evenly;
+    width: 100%;
+    height: 60px;  
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: space-evenly;
+    width: 100%;
+    height: 100%;  
+}
+
+.keypad-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.normalfunctions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.keyline {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin: 10px;
+}
+
+
+
+
