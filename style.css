@@ -16,9 +16,12 @@ body {
 button {
     font-size: xx-large;
     border-radius: 10px;
+    transition: all 0.2s ease;
 }
 
-/*TO DO add pressing feeling to all buttons */
+.number, .function, #backspace {
+    box-shadow: 6px 6px 4px rgba(0, 0, 0, 0.4);
+}
 
 .number {
     background-color: orange;
@@ -37,10 +40,8 @@ button {
 }
 
 #backspace {
-    width: 140px;
+    background-color: rgba(226, 88, 8, 0.76);
 }
-
-/* TO DO format bspace shape */
 
 .calculator {
     background-color: purple;
@@ -51,8 +52,6 @@ button {
     height: 800px;
     border-radius: 15px;
 }
-
-/* TO DO add shadow to calculator and/or some depth */
 
 .display {
     background-color: rgb(218, 202, 114);
@@ -101,6 +100,7 @@ button {
     gap: 10px;
 }
 
-
-
+.function:hover, .number:hover, #backspace:hover {
+    transform: scale(0.95);
+}
 

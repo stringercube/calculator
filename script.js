@@ -20,18 +20,20 @@ function divide(a, b) {
     };
 };
 
-function clear() {
-    //TO DO clear variables stored and reset display
+function clear(display) {
+    display.textContent = "";
 }
 
-function point() {
-    //TO DO add point
+function point(display) {
+    if (Number(display.textContent.substr(-1)) >= 0) { 
+        display.textContent += "."
+    }
 }
 
 // special operation functions
 
-function power(x, n) {
-	return x ** n;
+function power(a, b) {
+	return a ** b;
 };
 
 function factorial(n) {
@@ -45,9 +47,9 @@ function factorial(n) {
     return product;
 };
 
-function fibonacci(argument) {
+function fibonacci(n) {
     // TO DO check if integer and above 0:
-    number = Number(argument);
+    number = Number(n);
     
     if (number < 0) {
         return "OOPS"
@@ -67,23 +69,127 @@ function fibonacci(argument) {
     return fibo;
 };
 
-function backspace() {
-    //TO DO
-    //erase operator or last digit of input variable
+function backspace(display) {
+    const reducedText = display.textContent.substr(0, display.textContent.length - 1);
+    display.textContent = reducedText;
 }
 
 // function operate
 
-function operate(a, b, operator) {
-    //TO DO
-    //get a b and operator from input variables
-    //call function acc to operator found and parse input values
-    //return results and put it in display
+function operate(a, b, operator, display) {
+    
+    let result = 0;
+    if (operator === 'division') {
+        result = divide(a, b);
+    } else if (operator === 'multiplication') {
+        result = multiply(a, b);
+    } else if (operator === 'rest') {
+        result = subtract(a, b);
+    } else if (operator === 'addition') {
+        result = add(a, b);
+    }
+    
+    console.log(result);
+
+    display.textContent = String(result);
 }
 
-//TO DO
-//add event listener for number key pad
-//add event listener for normal and special functions
-    //get from context operator and a value, store them
 
-//TO DO add event listener for keyboard input
+document.addEventListener('DOMContentLoaded', (e) => {
+    // Select all buttons with the class 'number'
+    const buttons = document.querySelectorAll('.number');
+    const operators = document.querySelectorAll('.function');
+
+    // Iterate over the NodeLists of buttons and operators and add event listeners
+    buttons.forEach(button => {
+        button.addEventListener('click', inputKey)
+        });
+   
+    operators.forEach(operator => {
+        operator.addEventListener('click', inputOperator)
+        });
+    });
+
+function inputKey(e) {
+    let keyValue = e.currentTarget.textContent;
+    const screenContent = document.querySelector('.display');
+
+    if (keyValue === "C") {
+        clear(screenContent);
+    } else if (keyValue === ".") {
+        point(screenContent);
+    } else {
+        for (let i = 0; i < 10; i++) {
+            if (keyValue === `${i}`) {
+                screenContent.textContent += `${i}`;
+                break;
+            }
+        }
+    };
+};
+
+function inputOperator(e) { 
+    let keyValue = e.currentTarget.id;
+    const screenContent = document.querySelector('.display');
+    if (keyValue === 'backspace') {
+        backspace(screenContent);
+    };
+
+    if (Math.abs(Number(screenContent.textContent)) >= 0) {
+        if (keyValue === 'keydiv') {
+            screenContent.textContent += '\u00F7';
+            console.log(operator);
+            operator = 'division';
+        } else if (keyValue === 'keymult') {
+            screenContent.textContent += '\u00D7';
+            operator = 'multiplication';
+        } else if (keyValue === 'keyminus') {
+            screenContent.textContent += '\u2212';
+            operator = 'rest';
+        } else if (keyValue === 'keyplus') {
+            screenContent.textContent += '\u002B';
+            operator = "addition";
+        };
+    };
+
+    if (keyValue === 'keyequal') {
+        operator = getOperator(screenContent.textContent);
+        [a, b] = getNumbers(operator);
+        operate(a, b, operator, screenContent);
+    };
+};
+
+function getNumbers(operator) {
+    const screenContent = document.querySelector('.display');
+    const displayText = screenContent.textContent;
+    
+    let separator = displayText.length - 1;
+    
+    if (operator === 'division') {
+        separator = displayText.indexOf('\u00F7');
+    } else if (operator === 'multiplication') {
+        separator = displayText.indexOf('\u00D7');
+    } else if (operator === 'rest') {
+        separator = displayText.indexOf('\u2212');
+    } else if (operator === 'addition') {
+        separator = displayText.indexOf('\u002B');
+        console.log(separator);
+    };
+    
+    const a = Number(displayText.substring(0 , separator));
+    const b = Number(displayText.substring(separator + 1));
+    console.log([a, b]);
+    return [a, b];
+};
+
+function getOperator(display) {
+    if (display.includes('\u00F7')) {
+        return 'division';
+    } else if (display.includes('\u00D7')) {
+        return 'multiplication';
+    } else if (display.includes('\u2212')) {
+        return 'rest';
+    } else if (display.includes('\u002B')) {
+        return 'addition';
+    };
+};
