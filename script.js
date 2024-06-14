@@ -48,19 +48,17 @@ function factorial(n) {
 };
 
 function fibonacci(n) {
-    // TO DO check if integer and above 0:
-    number = Number(n);
     
-    if (number < 0) {
+    if (n < 0) {
         return "OOPS"
-    } else if (number === 0) {
+    } else if (n === 0) {
         return 0
-    } else if (number === 1) {
+    } else if (n === 1) {
         return 1
     } 
     
     let a = 0, b = 1, fibo = 0;
-    for (let i = 2; i <= number; i++) {
+    for (let i = 2; i <= n; i++) {
         fibo = a + b;
         a = b;
         b = fibo;
@@ -79,6 +77,7 @@ function backspace(display) {
 function operate(a, b, operator, display) {
     
     let result = 0;
+
     if (operator === 'division') {
         result = divide(a, b);
     } else if (operator === 'multiplication') {
@@ -87,7 +86,9 @@ function operate(a, b, operator, display) {
         result = subtract(a, b);
     } else if (operator === 'addition') {
         result = add(a, b);
-    }
+    } else if (operator === 'power') {
+        result = power(a, b);
+    } else return;
     
     console.log(result);
 
@@ -123,8 +124,8 @@ function inputKey(e) {
             if (keyValue === `${i}`) {
                 screenContent.textContent += `${i}`;
                 break;
-            }
-        }
+            };
+        };
     };
 };
 
@@ -138,17 +139,14 @@ function inputOperator(e) {
     if (Math.abs(Number(screenContent.textContent)) >= 0) {
         if (keyValue === 'keydiv') {
             screenContent.textContent += '\u00F7';
-            console.log(operator);
-            operator = 'division';
         } else if (keyValue === 'keymult') {
             screenContent.textContent += '\u00D7';
-            operator = 'multiplication';
         } else if (keyValue === 'keyminus') {
             screenContent.textContent += '\u2212';
-            operator = 'rest';
         } else if (keyValue === 'keyplus') {
             screenContent.textContent += '\u002B';
-            operator = "addition";
+        } else if (keyValue === 'exponential') {
+            screenContent.textContent += '^';
         };
     };
 
@@ -157,13 +155,26 @@ function inputOperator(e) {
         [a, b] = getNumbers(operator);
         operate(a, b, operator, screenContent);
     };
+
+    if (getOperator(screenContent.textContent) === "") {
+        [a] = getNumbers();
+        if (Number.isInteger(a)) {
+            if (keyValue === 'fibo') {
+                let result = fibonacci(a);
+                screenContent.textContent = String(result);
+            } else if (keyValue === 'factorial') {
+                let result = factorial(a);
+                screenContent.textContent = String(result);
+            } else return;
+        };
+    };
 };
 
-function getNumbers(operator) {
+function getNumbers(operator = "") {
     const screenContent = document.querySelector('.display');
     const displayText = screenContent.textContent;
     
-    let separator = displayText.length - 1;
+    let separator = displayText.length;
     
     if (operator === 'division') {
         separator = displayText.indexOf('\u00F7');
@@ -173,9 +184,10 @@ function getNumbers(operator) {
         separator = displayText.indexOf('\u2212');
     } else if (operator === 'addition') {
         separator = displayText.indexOf('\u002B');
-        console.log(separator);
+    } else if (operator === 'power') {
+        separator = displayText.indexOf('^');
     };
-    
+
     const a = Number(displayText.substring(0 , separator));
     const b = Number(displayText.substring(separator + 1));
     console.log([a, b]);
@@ -191,5 +203,7 @@ function getOperator(display) {
         return 'rest';
     } else if (display.includes('\u002B')) {
         return 'addition';
-    };
+    } else if (display.includes('^')) {
+        return 'power';
+    } else return "";
 };
