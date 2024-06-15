@@ -25,10 +25,14 @@ function clear(display) {
 }
 
 function point(display) {
-    if (Number(display.textContent.substr(-1)) >= 0) { 
-        display.textContent += "."
-    }
-}
+    if (Number(display.textContent.substr(-1)) >= 0) {
+        let operator = getOperator(display.textContent);
+        let [a, b] = getNumbers(display.textContent, operator);
+        if ((b === 0 && a % 1 === 0) || (b !== 0 && b % 1 === 0)) {
+            display.textContent += ".";        
+        };
+    };
+};
 
 // special operation functions
 
@@ -48,7 +52,6 @@ function factorial(n) {
 };
 
 function fibonacci(n) {
-    
     if (n < 0) {
         return "OOPS"
     } else if (n === 0) {
@@ -68,8 +71,7 @@ function fibonacci(n) {
 };
 
 function backspace(display) {
-    const reducedText = display.textContent.substr(0, display.textContent.length - 1);
-    display.textContent = reducedText;
+    display.textContent = display.textContent.substr(0, display.textContent.length - 1);
 }
 
 // function operate
@@ -89,14 +91,11 @@ function operate(a, b, operator, display) {
     } else if (operator === 'power') {
         result = power(a, b);
     } else return;
-    
-    console.log(result);
-
-    display.textContent = String(result);
+    display.textContent = result;
 }
 
 
-document.addEventListener('DOMContentLoaded', (e) => {
+document.addEventListener('DOMContentLoaded', () => {
     // Select all buttons with the class 'number'
     const buttons = document.querySelectorAll('.number');
     const operators = document.querySelectorAll('.function');
@@ -109,13 +108,27 @@ document.addEventListener('DOMContentLoaded', (e) => {
     operators.forEach(operator => {
         operator.addEventListener('click', inputOperator)
         });
+
+    document.addEventListener('keydown', (e) => {
+        const key = e.key;
+
+        if (key === ' ') return; // Prevent space input
+        
+        if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(key) || key === '.' || key === 'c') {
+            inputKey({ key: key });
+        }
+        
+        if (['/', '*', '-', '+', 'Enter', 'Backspace'].includes(key)) {
+            inputOperator({ key: key });
+        }
+        });
     });
 
 function inputKey(e) {
-    let keyValue = e.currentTarget.textContent;
+    let keyValue = e.currentTarget ? e.currentTarget.textContent : e.key;
     const screenContent = document.querySelector('.display');
 
-    if (keyValue === "C") {
+    if (keyValue === 'c' || keyValue === 'C') {
         clear(screenContent);
     } else if (keyValue === ".") {
         point(screenContent);
@@ -124,56 +137,47 @@ function inputKey(e) {
             if (keyValue === `${i}`) {
                 screenContent.textContent += `${i}`;
                 break;
-            };
-        };
-    };
-};
+            }
+        }
+    }
+}
 
 function inputOperator(e) { 
-    let keyValue = e.currentTarget.id;
+    let keyValue = e.currentTarget ? e.currentTarget.id : e.key;
     const screenContent = document.querySelector('.display');
-    if (keyValue === 'backspace') {
+
+    if (keyValue === 'Backspace') {
         backspace(screenContent);
-    };
-
-    if (Math.abs(Number(screenContent.textContent)) >= 0) {
-        if (keyValue === 'keydiv') {
-            screenContent.textContent += '\u00F7';
-        } else if (keyValue === 'keymult') {
-            screenContent.textContent += '\u00D7';
-        } else if (keyValue === 'keyminus') {
-            screenContent.textContent += '\u2212';
-        } else if (keyValue === 'keyplus') {
-            screenContent.textContent += '\u002B';
-        } else if (keyValue === 'exponential') {
-            screenContent.textContent += '^';
-        };
-    };
-
-    if (keyValue === 'keyequal') {
-        operator = getOperator(screenContent.textContent);
-        [a, b] = getNumbers(operator);
-        operate(a, b, operator, screenContent);
-    };
-
-    if (getOperator(screenContent.textContent) === "") {
-        [a] = getNumbers();
+    } else if (['/', '*', '-', '+', '^'].includes(keyValue)) {
+        if (Math.abs(Number(screenContent.textContent)) >= 0) {
+            if (keyValue === '/') {
+                screenContent.textContent += '\u00F7';
+            } else if (keyValue === '*') {
+                screenContent.textContent += '\u00D7';
+            } else if (keyValue === '-') {
+                screenContent.textContent += '\u2212';
+            } else if (keyValue === '+') {
+                screenContent.textContent += '\u002B';
+            } else if (keyValue === '^') {
+                screenContent.textContent += '^';
+            };
+        }
+    } else if (keyValue === 'Enter') {
+        const operator = getOperator(screenContent.textContent);
+        const [a, b] = getNumbers(screenContent.textContent, operator);
+        if (operator && !isNaN(b)) {
+            operate(a, b, operator, screenContent);
+        }
+    } else if (keyValue === 'fibo' || keyValue === 'factorial') {
+        const [a] = getNumbers(screenContent.textContent);
         if (Number.isInteger(a)) {
-            if (keyValue === 'fibo') {
-                let result = fibonacci(a);
-                screenContent.textContent = String(result);
-            } else if (keyValue === 'factorial') {
-                let result = factorial(a);
-                screenContent.textContent = String(result);
-            } else return;
-        };
-    };
-};
+            const result = keyValue === 'fibo' ? fibonacci(a) : factorial(a);
+            screenContent.textContent = String(result);
+        }
+    }
+} 
 
-function getNumbers(operator = "") {
-    const screenContent = document.querySelector('.display');
-    const displayText = screenContent.textContent;
-    
+function getNumbers(displayText, operator = "") {
     let separator = displayText.length;
     
     if (operator === 'division') {
@@ -186,13 +190,12 @@ function getNumbers(operator = "") {
         separator = displayText.indexOf('\u002B');
     } else if (operator === 'power') {
         separator = displayText.indexOf('^');
-    };
+    }
 
     const a = Number(displayText.substring(0 , separator));
     const b = Number(displayText.substring(separator + 1));
-    console.log([a, b]);
     return [a, b];
-};
+}
 
 function getOperator(display) {
     if (display.includes('\u00F7')) {
@@ -206,4 +209,4 @@ function getOperator(display) {
     } else if (display.includes('^')) {
         return 'power';
     } else return "";
-};
+}
