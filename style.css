@@ -17,6 +17,11 @@ button {
     font-size: xx-large;
     border-radius: 10px;
     transition: all 0.2s ease;
+    transform: scale(1);
+}
+
+button:active {
+    transform: scale(0.95);
 }
 
 .number, .function, #backspace {
@@ -98,9 +103,5 @@ button {
     display: flex;
     flex-direction: row;
     gap: 10px;
-}
-
-.function:hover, .number:hover, #backspace:hover {
-    transform: scale(0.95);
 }
 
