@@ -157,6 +157,7 @@ function inputKey(e) {
             }
         }
     }
+    document.activeElement.blur();
 }
 
 // function to associate input to associated function based on event
@@ -197,6 +198,7 @@ function inputOperator(e) {
             screenContent.textContent = result;
         }
     }
+    document.activeElement.blur();
 } 
 
 // function designed to get numbers whether there's a specific operator on screen or not
